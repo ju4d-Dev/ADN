@@ -1,0 +1,53 @@
+#include <iostream>
+#include <list>
+
+const int m = 2003; // Asegúrate de que m sea un número primo mayor que 2000
+const int a = 17;   // a debe ser coprimo con m
+
+unsigned hash(unsigned K) {
+    K ^= K >> (sizeof(unsigned) * 8 - 5);
+    return (a * K) % m;
+}
+
+class HashTable {
+private:
+    std::list<unsigned> table[m];
+
+public:
+    void insert(unsigned key) {
+        unsigned index = hash(key);
+        table[index].push_back(key);
+    }
+
+    void remove(unsigned key) {
+        unsigned index = hash(key);
+        table[index].remove(key);
+    }
+
+    bool search(unsigned key) {
+        unsigned index = hash(key);
+        for (auto& k : table[index]) {
+            if (k == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+int main() {
+    HashTable ht;
+
+    ht.insert(42);
+    ht.insert(56);
+    ht.insert(72);
+
+    std::cout << "Buscar 56: " << (ht.search(56) ? "Encontrado" : "No Encontrado") << std::endl;
+    std::cout << "Buscar 99: " << (ht.search(99) ? "Encontrado" : "No Encontrado") << std::endl;
+
+    ht.remove(56);
+
+    std::cout << "Buscar 56 después de eliminarlo: " << (ht.search(56) ? "Encontrado" : "No Encontrado") << std::endl;
+
+    return 0;
+}
